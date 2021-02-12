@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class CoinController {
         return new ResponseEntity<>(coinList, HttpStatus.OK);
     }
 
+    // http://localhost:2019/total
     @GetMapping(value = "/total", produces = {"application/json"})
     public ResponseEntity<?> coinTotal()
     {
@@ -62,4 +64,33 @@ public class CoinController {
         System.out.println("The piggy bank holds " + total);
         return new ResponseEntity<>(total, HttpStatus.OK);
     }
+
+    // http://localhost:2019/money/{amount}
+    @GetMapping(value = "/money/{amount}", produces = {"application/json"})
+    public ResponseEntity<?> subtractCoins(@PathVariable double amount)
+    {
+        List<Coin> coinList = new ArrayList<>();
+        coinrepos.findAll().iterator().forEachRemaining(coinList::add);
+
+        double total = 0;
+        for (Coin c : coinList)
+        {
+            total += c.getValue() * c.getQuantity();
+        }
+        // Checking to make sure theres enough money in the bank to subtract
+        if(total > amount) {
+            total -= amount;
+        }
+        else {
+            System.out.println("Money is not available");
+        }
+
+        System.out.println("The old total: 7.3 " +  "The new total: " + total + " The amount subtracted: " + amount);
+        return new ResponseEntity<>(total, HttpStatus.OK);
+
+    }
+
+
+
+
 }
