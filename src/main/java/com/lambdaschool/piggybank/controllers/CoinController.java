@@ -26,4 +26,22 @@ public class CoinController {
 
         return new ResponseEntity<>(coinList, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/total", produces = {"application/json"})
+    public ResponseEntity<?> coinTotal()
+    {
+        System.out.println("Hello");
+        List<Coin> coinList = new ArrayList<>();
+        coinrepos.findAll().iterator().forEachRemaining(coinList::add);
+
+        double total = 0;
+        for (Coin c : coinList)
+        {
+            total = total + c.getValue();
+            System.out.println(c);
+        }
+
+        System.out.println(total);
+        return new ResponseEntity<>(total, HttpStatus.OK);
+    }
 }
