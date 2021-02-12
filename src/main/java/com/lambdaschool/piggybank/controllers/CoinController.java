@@ -30,14 +30,13 @@ public class CoinController {
     @GetMapping(value = "/total", produces = {"application/json"})
     public ResponseEntity<?> coinTotal()
     {
-        System.out.println("Hello");
         List<Coin> coinList = new ArrayList<>();
         coinrepos.findAll().iterator().forEachRemaining(coinList::add);
 
         double total = 0;
         for (Coin c : coinList)
         {
-            total = total + c.getValue();
+            total += c.getValue() * c.getQuantity();
             System.out.println(c);
         }
 
