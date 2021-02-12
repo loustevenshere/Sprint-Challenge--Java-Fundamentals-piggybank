@@ -13,6 +13,23 @@ import java.util.List;
 
 @RestController
 public class CoinController {
+    private static void CheckCoins(List<Coin> coinList, CheckCoin tester)
+    {
+        for (Coin c: coinList )
+        {
+            // if c.getQuantity > 1
+            if (tester.test(c))
+            {
+                System.out.println(c.getQuantity() + " " + c.getNameplural());
+            }
+            else {
+                System.out.println(c.getQuantity() + " " + c.getName());
+            }
+        }
+
+    }
+
+
 
     @Autowired
     CoinRepository coinrepos;
@@ -37,10 +54,12 @@ public class CoinController {
         for (Coin c : coinList)
         {
             total += c.getValue() * c.getQuantity();
-            System.out.println(c);
         }
 
-        System.out.println(total);
+        // Call check coins and give conditional statement in lambda expression
+        CheckCoins(coinList, c -> c.getQuantity() > 1);
+
+        System.out.println("The piggy bank holds " + total);
         return new ResponseEntity<>(total, HttpStatus.OK);
     }
 }
